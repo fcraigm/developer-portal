@@ -1,0 +1,69 @@
+## Models
+
+We currently offer the following models, which may change or expand over time. Each is described along with model-specific parameters.
+
+| Model Name                 | Type          | Modalities                | Context (Tokens) | License       |
+|----------------------------|---------------|----------------------------|------------------|---------------|
+| Mistral-Small-3.2-24B      | Chat + Vision | Text, Image, Tool-Calling | 32,768           | Apache 2.0    |
+| Qwen3-Embedding-8B         | Embedding     | Text to Vector            | 32,768           | Apache 2.0    |
+
+### Mistral-Small-3.2-24B-Instruct
+
+#### Description
+
+“Mistral-Small-3.2-24B-Instruct” is a multimodal, versatile chat model and an update to the successful [Mistral 3.1 model](https://mistral.ai/news/mistral-small-3-1). It supports and is suitable for:
+
+- Text generation within a chat completion (text to text)
+- Image processing (image to text)
+- Tool calling
+
+The following limitations apply:
+
+- Maximum context length: 32,768 tokens  
+- Maximum images per context: 4
+
+It is recommended to operate the model with the following parameters:
+
+- `temperature=0.15`
+
+#### Terms of Use and Licensing
+
+The general terms of use apply. The model is provided by [Mistral](https://mistral.ai/) under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.html), and reuse of the generated content is not subject to any additional restrictions.
+
+### Qwen3-Embedding-8B
+
+#### Description
+
+The Qwen3 Embedding model by Alibaba is designed for creating embeddings, which are essential for a retrieval-augmented generation (RAG) system. This model does not support chat interaction. It is used to convert documents and texts into individual vectors, which are stored in a vector database by the application, enabling semantic search. The strength of this model lies in its support of over 100 languages with high performance.
+
+The following limitations apply:
+
+- Maximum context length: 32,768 tokens  
+- Embedding dimension: 4,096  
+- The `dimensions` parameter for dynamically projecting to a lower dimension is not supported
+
+It is recommended to format embeddings for search queries using the following template:
+
+```
+Instruct: {task_description}
+Query: {query}
+```
+Here, {query} should express the individual search query in a sentence, and {task_description} should describe the task, for example:
+
+#### Terms of Use and Licensing
+
+The general terms of use apply. The model is provided by Alibaba under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.html), and reuse of the generated content is not subject to any additional restrictions.
+
+### Error Messages
+
+If the API returns a status code outside the 200 to 399 range, there is an error in the request. The following errors are expected:
+
+- `401 Unauthorized`: No API key was provided in the `Authorization` header, or the API key is invalid.
+
+- `429 Too Many Requests`: The rate limit has been reached. No further requests can be made within the current minute. The limit resets after the minute has passed.
+
+- `400 Bad Request`: The request cannot be processed. An error message should be included explaining the reasons:
+
+    - `At most n image(s) may be provided in one request.`: The total number of images in the provided context exceeds the model's capacity. Either remove images from the context or start a new context.
+    
+    - `max_tokens must be at least…`: The maximum context length of the model was exceeded for text generation. The error message also shows the number of excess tokens (as a negative value). The context must be shortened.
