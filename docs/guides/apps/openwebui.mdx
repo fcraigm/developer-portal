@@ -1,0 +1,56 @@
+---
+sidebar_label: OpenWebUI
+description: Learn how to set up and run OpenWebUi as an frontend for LLMs
+---
+
+# OpenWebUI
+
+## Introduction
+
+**Open WebUI** is a web frontend that allows for comfortable interaction with an LLM. It offers a ChatGPT-like interface with prompt input and additional configuration options.
+
+#### Requirements
+
+1. mStudio account with a vServer  
+2. API token for accessing an LLM (e.g., mittwald llm-hosting)  
+3. Configured subdomain for web access (e.g., openwebui.my-domain.com)
+
+### Further Links
+
+- mittwald ai-hosting: *Insert Link*  
+- Docker Image: `ghcr.io/open-webui/open-webui:main`  
+- Open Web UI Documentation: https://docs.openwebui.com/
+
+ :::note  
+ This guide assumes that you already have an API token for accessing a model. This token is **absolutely necessary** in order to use the prompt feature. Without it, you're only deploying a web frontend.  
+  
+ Open WebUI is only a frontend for input; no LLM is included in the container itself.
+ :::
+## How to Start the Container
+
+### Usage in mStudio
+
+Go to your project in mStudio and select **"Create Container"**. A guided dialog will open to help you create the container.
+
+In the first step, enter a description – this is a free-text field used to identify the container. Enter **"openwebui"** here and click **"Next"**.
+
+Next, you will be prompted for the desired image. The required name is `ghcr.io/open-webui/open-webui:main`. Enter this value and confirm again with **"Next"**.
+
+#### EntryPoint and Volume
+
+- The **EntryPoint** can remain unchanged → click **"Next"**.  
+- In the following step, you can optionally create a **volume** (persistent storage). This is not strictly required for `OpenWebUI`, so you can skip this step → **"Next"**.
+
+#### Environment Variables
+
+In the step **"Add Environment Variables"**, no modifications are necessary. Confirm by clicking **"Next"**. In the final dialog, you will be asked for the **port** – you can leave it as it is. Click **"Create Container"** to finish creating and start the container.
+
+#### Assigning the Domain
+
+Now switch to the **Domains** section and link `openwebui.my-domain.tld` to your container. Select the domain and set the newly created container as the target.
+
+From this point onward, the web frontend will be accessible via the domain. A dialog will then appear for creating the admin login credentials.
+
+#### Configuration in the Web Frontend – Storing the API Key
+
+Once the login credentials are created, you will be logged in as an admin. Click on the user bubble and navigate to the settings to store your API access
