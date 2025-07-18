@@ -1,0 +1,60 @@
+## Examples
+### Open WebUI
+Open WebUI can be used as a ChatGPT-like interface within container hosting. It is automatically installed and configured when an API key is created.
+
+For optimal results, it may be necessary to adjust the default parameters of Open WebUI for the model. You can modify these parameters in the “Models” section, after selecting the model, under “Advanced Params.” Apply the recommended parameters documented in the models section, such as `top_p`, `top_k`, and `temperature`. We also recommend hiding the embedding models in this section, which are automatically detected by Open WebUI, since they cannot be used in a chat.
+
+Open WebUI offers the ability to store knowledge in the form of documents, which can be accessed as needed. This is known as retrieval-augmented generation (RAG). In the left menu bar, under “Workspace” and then in the “Knowledge” tab, you can upload documents that can be accessed in a chat using a hashtag.
+
+To enable more efficient processing, you can use an embedding model. In the Admin Panel under the “Settings” tab, go to the “Documents” menu item. In the “Embedding” section, first select “OpenAI” in the dropdown menu as the embedding model engine. Then, insert the above-mentioned endpoint and your generated API key. Select one of our offered embedding models under “Embedding Model” and adjust the parameters “Top K” and “RAG Template” in the “Retrieval” section for optimal results.
+
+### Python
+You can use the models within programming languages conveniently via existing libraries that support the OpenAI API. Therefore, mittwald’s AI hosting can often be used as a drop-in replacement.
+
+For the following examples, first install the required libraries using a Python package manager and store the API key generated in mStudio in a `.env` file:
+```sh
+pip install python-dotenv openai langchain-openai
+echo 'OPENAI_API_KEY="sk-…"' > .env
+```
+Then, you can access a model using the `OpenAI` package:
+
+```
+from openai import OpenAI
+from dotenv import load_dotenv
+# Load .env file
+load_dotenv()
+# Initialize client with custom host and key from environment
+client = OpenAI(
+ base_url="https://llm.aihosting.mittwald.de/v1"
+)
+# Make a simple call
+response = client.chat.completions.create(
+ model="Mistral-Small-3.2-24B-Instruct",
+ temperature = 0.15,
+ messages=[
+   {"role": "user", "content": "Hello there!"}
+ ]
+)
+print(response.choices[0].message.content)
+```
+
+Alternatively, you can also use `langchain`:
+
+```
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage
+# Load .env file
+load_dotenv()
+# Initialize client with custom host and key from environment
+chat = ChatOpenAI(
+ model="Mistral-Small-3.2-24B-Instruct",
+ base_url="https://llm.aihosting.mittwald.de/v1",
+ temperature = 0.15
+)
+# Get response
+response = chat.invoke([
+ HumanMessage(content="Hello there!")
+])
+print(response.content)
+```
